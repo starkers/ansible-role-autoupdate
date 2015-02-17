@@ -1,0 +1,28 @@
+- name: Install cron-apt
+  apt: name=cron-apt state=installed
+  when: autoupdate_enable == true
+
+
+- name: Enable apt-get upgrade -y
+  lineinfile:
+    dest=/etc/cron-apt/action.d/5-upgrade
+    line="-y upgrade"
+    create=yes
+  when: autoupdate_enable == true
+
+- name: Set the email address
+  lineinfile:
+    dest=/etc/cron-apt/config
+    regexp="^MAILTO="
+    line="MAILTO={{ autoupdate_email }}"
+  when: autoupdate_email is defined
+
+# - name: Enable cron-apt checks only (no updates.. tsk tsk)
+#   lineinfile:
+#     dest=/etc/sysconfig/cron-apt
+#     regexp="{{ item.regexp }}"
+#     line="{{ item.line }}"
+#   with_items:
+#     - { regexp: '^CHECK_ONLY=',    line: 'CHECK_ONLY=yes' }
+#   when: autoupdate_notifyonly == true
+#   notify: Disable cron-apt

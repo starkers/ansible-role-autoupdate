@@ -1,0 +1,33 @@
+- name: Install yum-cron
+  yum: name=yum-cron state=installed
+  when: autoupdate_enable == true
+  notify: Enable yum-cron
+
+- name: Enable yum-cron
+  lineinfile:
+    dest=/etc/sysconfig/yum-cron
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+  with_items:
+    - { regexp: '^CHECK_ONLY=',    line: 'CHECK_ONLY=no' }
+    - { regexp: '^DOWNLOAD_ONLY=', line: 'DOWNLOAD_ONLY=no' }
+  when: autoupdate_enable == true
+  notify: Restart yum-cron
+
+- name: Set the email address
+  lineinfile:
+    dest=/etc/sysconfig/yum-cron
+    regexp="^MAILTO="
+    line="MAILTO={{ autoupdate_email }}"
+  when: autoupdate_email is defined
+  notify: Restart yum-cron
+
+- name: Enable yum-cron checks only (no updates.. tsk tsk)
+  lineinfile:
+    dest=/etc/sysconfig/yum-cron
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+  with_items:
+    - { regexp: '^CHECK_ONLY=',    line: 'CHECK_ONLY=yes' }
+  when: autoupdate_notifyonly == true
+  notify: Disable yum-cron

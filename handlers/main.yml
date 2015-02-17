@@ -1,0 +1,38 @@
+---
+#rhel/centos
+- name: Disable yum-cron
+  service: >
+    name=yum-cron
+    state=stopped
+    enabled=no
+
+- name: Enable yum-cron
+  service: >
+    name=yum-cron
+    state=started
+    enabled=yes
+
+- name: Restart yum-cron
+  service: >
+    name=yum-cron
+    state=restarted
+    enabled=yes
+
+# ##ubuntu/debian
+# - name: Disable cron-apt
+#   service: >
+#     name=yum-cron
+#     state=stopped
+#     enabled=no
+
+# - name: Enable cron-apt
+#   service: >
+#     name=yum-cron
+#     state=started
+#     enabled=yes
+
+# - name: Restart cron-apt
+#   service: >
+#     name=yum-cron
+#     state=restarted
+#     enabled=yes
