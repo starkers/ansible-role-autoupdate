@@ -1,31 +1,71 @@
-Role Name
-=========
+Autoupdates
+===========
 
-A brief description of the role goes here.
+Enable automatic updating on an Ubuntu or CentOS server. This simply installed and activates either yum-cron or cron-apt and attempts to configure them.
+
+They (should) default to daily checks and updates.
+
+Should work OK on most Distro's although I've not made it too generic as I've not had the time to test yet.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- apt or yum (tested on Ubuntu 14.04 + Centos 6)
+- The target server should have access to updates
+- Email should work so you can get notifications
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+There are currently only a few
+
+ - autoupdate_enable: **no** or **yes** (default: yes)
+ - autoupdate_notifyonly: **no** or **yes** (default: no)
+ **NOTE** this only works on centos
+ - autoupdate_email: your@address.com (default: root)
+
+ With these simple variables there are several options now..
+
+
+Playbook Examples
+-----------------
+#### default (do updates)
+
+```
+- hosts: servers
+  roles:
+    - stark.autoupdate
+```
+
+#### Don't auto-update but alert me
+This will perform the update checks but will only email you to alert you and not perform any changes.
+
+This sadly only works on yum-cron at the moment
+
+```
+- hosts: servers
+  vars:
+  - autoupdate_enable: false
+  - autoupdate_notify: true
+  - autoupdate_email: batman@gotham.org
+
+  roles: stark.autoupdate
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+I've only tested this on Ubuntu 14.04 and Centos6
 
-Example Playbook
-----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+TODO
+----
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+I'd like to extend the following features sometime..
+- schedule when they happen
+- download updates but don't run
+- alert me if no updates have been run after XX days
+- send a test email to ensure alerting works
 
 License
 -------
@@ -35,4 +75,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+david@starkers.org
