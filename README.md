@@ -29,7 +29,7 @@ There are currently only a few
 
 Playbook Examples
 -----------------
-#### default (do updates)
+#### default (enable updates)
 
 ```
 - hosts: servers
@@ -37,19 +37,15 @@ Playbook Examples
     - stark.autoupdate
 ```
 
-#### Don't auto-update but alert me
-This will perform the update checks but will only email you to alert you and not perform any changes.
-
-This sadly only works on yum-cron at the moment
+#### disable updates
+This disables updating via yum-cron / apt-cron (untested really).
 
 ```
 - hosts: servers
   vars:
   - autoupdate_enable: false
-  - autoupdate_notify: true
-  - autoupdate_email: batman@gotham.org
-
-  roles: stark.autoupdate
+  roles:
+    - stark.autoupdate
 ```
 
 Dependencies
@@ -61,9 +57,11 @@ I've only tested this on Ubuntu 14.04 and Centos6
 TODO
 ----
 
-I'd like to extend the following features sometime..
+#### I'd like to extend the following features sometimee..
 - schedule when they happen
 - download updates but don't run
+- download and alert me
+- alert me but do nothing
 - alert me if no updates have been run after XX days
 - send a test email to ensure alerting works
 
