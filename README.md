@@ -13,16 +13,22 @@ Please help me to add support for more environments (EG: debian, centos7) by tes
 Requirements
 ------------
 
-- apt or yum (tested on Ubuntu 14.04 + Centos 6)
+- apt or yum
 - The target server should have access to updates
 - the server should have working email (if you want notifications)
+
+Tested on
+---------
+- Ubuntu 14.04
+- Mint 17 (qiana)
+- Centos 6
 
 Role Variables
 --------------
 
 There are currently only a few
 
- - autoupdate_enable: **no** or **yes** (default: yes)
+ - autoupdate_enable: **false** or **true** (default: true)
  - autoupdate_email: your@address.com (default: root)
 
 **NOTE** I still need to do tests to ensure the email stuff works but for now enabling updates works OK.

@@ -62,6 +62,9 @@ galaxy_info:
   #  - 9.1
   #  - 9.1
   #  - 9.2
+  - name: Linuxmint
+    versions:
+      - qiana
   - name: Ubuntu
     versions:
   #  - all
