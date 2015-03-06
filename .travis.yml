@@ -2,21 +2,26 @@
 language: python
 python: "2.7"
 
-before_install:
-  - sudo apt-get update -qq
+env:
+- SITE_AND_INVENTORY="tests/main.yml -i tests/inventory"
+
 
 install:
-  - pip install ansible
+  - "pip install ansible"
+  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 
-  - "printf '[defaults]\nroles_path = ../' > ansible.cfg"
+
 
 script:
- - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+  # check syntax
+  - "ansible-playbook $SITE_AND_INVENTORY --syntax-check"
 
- - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
+  # attempt to run the role
+  - "ansible-playbook $SITE_AND_INVENTORY --connection=local -vvvv --sudo"
 
- - >
-   ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
-   | grep -q 'changed=0.*failed=0'
-   && (echo 'Idempotence test: pass' && exit 0)
-   || (echo 'Idempotence test: fail' && exit 1)
+  # ensure it passed idempotence test
+  - >
+    ansible-playbook $SITE_AND_INVENTORY --connection=local -vvvv --sudo
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
